@@ -15,7 +15,7 @@ import (
 
 	"github.com/zzl/go-win32api/v2/win32"
 	"golang.org/x/sys/windows"
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 )
 
 func TestWebViewProfileCleanupRetriesLockedFile(t *testing.T) {
@@ -60,7 +60,7 @@ func TestWebViewCancelledBeforeLaunch(t *testing.T) {
 }
 
 func TestWebViewNavigationPolicy(t *testing.T) {
-	for _, raw := range []string{"https://evil.invalid", "file:///C:/private", "hms://redirect_uri.evil?code=x", "tinglan://callback"} {
+	for _, raw := range []string{"https://evil.invalid", "file:///C:/private", "hms://redirect_uri.evil?code=x", "hwmusic://callback"} {
 		w := &authWindow{allowed: huawei.AllowedLoginURL}
 		if w.inspect(raw) || w.settled {
 			t.Fatal("untrusted navigation accepted")

@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { macSigningIdentity, signingConfig } from './sign-macos.mjs';
 
 if (process.platform !== 'darwin') throw new Error('Local code signing setup is macOS only');
-const name = 'Tinglan Local Development';
+const name = 'hwmusic Local Development';
 const run = (cmd, args) => execFileSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 20000 });
 const existing = macSigningIdentity();
 if (existing) {
@@ -21,7 +21,7 @@ try {
   if (error.status !== 44) throw error;
 }
 if (!fingerprint) {
-  const scratch = mkdtempSync(join(tmpdir(), 'tinglan-signing-'));
+  const scratch = mkdtempSync(join(tmpdir(), 'hwmusic-signing-'));
   try {
     const config = join(scratch, 'certificate.cnf');
     const cert = join(scratch, 'certificate.pem');
@@ -40,10 +40,10 @@ extendedKeyUsage = critical,codeSigning
 subjectKeyIdentifier = hash
 `, { mode: 0o600 });
     run('openssl', ['req', '-new', '-newkey', 'rsa:3072', '-nodes', '-x509', '-sha256', '-days', '3650', '-config', config, '-keyout', key, '-out', cert]);
-    run('openssl', ['pkcs12', '-export', '-inkey', key, '-in', cert, '-name', name, '-out', bundle, '-passout', 'pass:tinglan-local-import']);
+    run('openssl', ['pkcs12', '-export', '-inkey', key, '-in', cert, '-name', name, '-out', bundle, '-passout', 'pass:hwmusic-local-import']);
     // Only codesign may use this private key; do not grant all-app access or
     // install a system-wide trusted root. Scratch is private and always removed.
-    run('security', ['import', bundle, '-k', keychain, '-f', 'pkcs12', '-P', 'tinglan-local-import', '-x', '-T', '/usr/bin/codesign']);
+    run('security', ['import', bundle, '-k', keychain, '-f', 'pkcs12', '-P', 'hwmusic-local-import', '-x', '-T', '/usr/bin/codesign']);
     fingerprint = run('openssl', ['x509', '-in', cert, '-noout', '-fingerprint', '-sha1']).split('=')[1].replaceAll(':', '').trim();
   } finally {
     rmSync(scratch, { recursive: true, force: true });

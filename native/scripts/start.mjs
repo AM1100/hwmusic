@@ -10,7 +10,7 @@ child = spawn(command, args, {
   cwd: fileURLToPath(new URL('../', import.meta.url)), stdio: 'inherit',
 });
 child.once('error', error => {
-  const binary = join(root, 'out/native/tinglan', `${process.platform}-${process.arch}`, process.platform === 'win32' ? 'tinglan.exe' : 'tinglan');
+  const binary = join(root, 'out/native/hwmusic', `${process.platform}-${process.arch}`, process.platform === 'win32' ? 'hwmusic.exe' : 'hwmusic');
   if (!fallback && error.code === 'ENOENT' && !process.env.HWMUSIC_GO && existsSync(binary)) {
     console.log('未找到 Go，启动已构建的本地 Viva 程序；源码修改需重新构建。');
     run(binary, process.argv.slice(2), true);
@@ -27,10 +27,10 @@ if (probe.status === 0) {
   const build = spawnSync(process.execPath, [join(root, 'native/scripts', mac ? 'build-macos.mjs' : 'build.mjs')], { cwd: root, stdio: 'inherit' });
   if (build.status !== 0) process.exit(build.status ?? 1);
   // Run the built app from a stable location; credentials use the local profile.
-  const binary = mac ? join(root, 'out/native/Tinglan.app/Contents/MacOS/tinglan') : join(root, 'out/native/tinglan', `${process.platform}-${process.arch}`, process.platform === 'win32' ? 'tinglan.exe' : 'tinglan');
+  const binary = mac ? join(root, 'out/native/hwmusic.app/Contents/MacOS/hwmusic') : join(root, 'out/native/hwmusic', `${process.platform}-${process.arch}`, process.platform === 'win32' ? 'hwmusic.exe' : 'hwmusic');
   run(binary, process.argv.slice(2), true);
 } else if (probe.error?.code === 'ENOENT' && !process.env.HWMUSIC_GO) {
-  const bundle = join(root, 'out/native/Tinglan.app/Contents/MacOS/tinglan');
+  const bundle = join(root, 'out/native/hwmusic.app/Contents/MacOS/hwmusic');
   if (process.platform === 'darwin' && existsSync(bundle)) run(bundle, process.argv.slice(2), true);
   else run(go, ['version']);
 } else {

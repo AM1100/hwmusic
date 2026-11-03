@@ -6,7 +6,7 @@ import (
 
 	"github.com/vivaui/viva/flex"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 )
 
 var editPlaylistID = tree.ID(shell, "edit-description")

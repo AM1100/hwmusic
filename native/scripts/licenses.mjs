@@ -15,6 +15,13 @@ export async function writeNotices(destination) {
   for (const module of modules) {
     if (module.Main || !module.Dir) continue;
     const files = (await readdir(module.Dir)).filter(name => /^(LICENSE|UNLICENSE|COPYING|NOTICE)(\..*)?$/i.test(name));
+    // v0.0.1 declares MIT and its author in README rather than a LICENSE file.
+    if (!files.length && module.Path === 'github.com/mattn/go-localereader') {
+      const readme = await readFile(join(module.Dir, 'README.md'), 'utf8');
+      if (!/## License\s+MIT\b/.test(readme)) throw new Error('Missing go-localereader license declaration');
+      sections.push(`${module.Path} ${module.Version}\nREADME.md (upstream license declaration)\n${readme}`);
+      continue;
+    }
     if (!files.length) throw new Error(`No license file found for ${module.Path}`);
     for (const name of files) {
       sections.push(`${module.Path} ${module.Version}\n${name}\n${await readFile(join(module.Dir, name), 'utf8')}`);

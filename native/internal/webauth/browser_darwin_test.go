@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"huawei-music-desktop/native/internal/huawei"
-	"huawei-music-desktop/native/internal/testsupport"
+	"hwmusic/native/internal/huawei"
+	"hwmusic/native/internal/testsupport"
 )
 
 func TestMain(m *testing.M) { os.Exit(testsupport.Run(m)) }

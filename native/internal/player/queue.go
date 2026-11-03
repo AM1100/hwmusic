@@ -1,7 +1,7 @@
 package player
 
 import (
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 	"math/rand/v2"
 )
 

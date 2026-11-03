@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/icons"
-	"huawei-music-desktop/native/internal/lyrics"
+	"hwmusic/native/internal/icons"
+	"hwmusic/native/internal/lyrics"
 	"math"
 	"strings"
 	"time"

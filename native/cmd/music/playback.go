@@ -6,11 +6,11 @@ import (
 	"math"
 	"time"
 
-	"huawei-music-desktop/native/internal/audio"
-	"huawei-music-desktop/native/internal/huawei"
-	"huawei-music-desktop/native/internal/lyrics"
-	"huawei-music-desktop/native/internal/resource"
-	"huawei-music-desktop/native/internal/storage"
+	"hwmusic/native/internal/audio"
+	"hwmusic/native/internal/huawei"
+	"hwmusic/native/internal/lyrics"
+	"hwmusic/native/internal/resource"
+	"hwmusic/native/internal/storage"
 )
 
 type playbackResult struct {

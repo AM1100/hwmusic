@@ -19,7 +19,7 @@ import (
 	"runtime/cgo"
 	"unsafe"
 
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 )
 
 type result struct {

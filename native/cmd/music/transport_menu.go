@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/icons"
+	"hwmusic/native/internal/icons"
 )
 
 var transportOptions = tree.Sub(shell, tree.Name("transport-options"))

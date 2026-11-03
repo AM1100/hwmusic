@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"huawei-music-desktop/native/internal/mainthread"
+	"hwmusic/native/internal/mainthread"
 	"os"
 	"runtime"
 	"sync/atomic"
@@ -12,19 +12,21 @@ import (
 	"github.com/vivaui/viva/app/iconpng"
 	"github.com/vivaui/viva/app/singleinstance"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/icons"
-	"huawei-music-desktop/native/internal/media"
+	"hwmusic/native/internal/icons"
+	"hwmusic/native/internal/media"
 )
 
 type applicationState struct {
-	backgroundCheck bool
-	nativeReady     atomic.Bool
-	updateQueued    atomic.Bool
-	quit            func()
-	window          *app.Window
-	reopen          atomic.Bool
-	mediaController *media.Controller
-	mediaEvents     []media.Event
+	backgroundCheck   bool
+	backgroundStart   atomic.Bool
+	backgroundExpired atomic.Bool
+	nativeReady       atomic.Bool
+	updateQueued      atomic.Bool
+	quit              func()
+	window            *app.Window
+	reopen            atomic.Bool
+	mediaController   *media.Controller
+	mediaEvents       []media.Event
 }
 
 func (m *model) togglePlayback() {
@@ -97,14 +99,10 @@ func runMusic(m *model) error {
 		}
 		m.nativeReady.Store(runtime.GOOS == "darwin" && os.Getenv("VIVA_HEADLESS") == "")
 		if m.backgroundCheck {
-			time.AfterFunc(300*time.Millisecond, func() { mainthread.Post(func() { m.window.Hide(); m.startTracks(m.tracks, 0) }) })
+			time.AfterFunc(300*time.Millisecond, func() { m.backgroundStart.Store(true); m.requestUpdate() })
 			time.AfterFunc(12*time.Second, func() {
-				mainthread.Post(func() {
-					if !m.closed {
-						fmt.Printf("BACKGROUND_CHECK_TIMEOUT hidden=%v index=%d running=%v state=%+v\n", m.window.Hidden(), m.queue.Index, m.audioRunning, m.audioState)
-						os.Exit(2)
-					}
-				})
+				m.backgroundExpired.Store(true)
+				m.requestUpdate()
 			})
 		}
 
@@ -215,13 +213,29 @@ func (m *model) requestUpdate() {
 		}
 		if m.window != nil && (m.window.Hidden() || m.window.Minimized()) {
 			m.wake()
-
-			if m.backgroundCheck && m.queue.Index == 1 && m.audioState.Playing {
-				fmt.Println("BACKGROUND_CHECK_OK: hidden window advanced to track 2")
-				m.quit()
-			}
 			return
 		}
 		m.invalidator.Invalidate()
 	})
+}
+
+// Run synthetic window actions on the same UI thread as ordinary OnWake work.
+// Linux dispatches through the invalidator, including while the window is hidden.
+func (m *model) checkBackground() {
+	if !m.backgroundCheck || m.window == nil {
+		return
+	}
+	if m.backgroundStart.Swap(false) {
+		m.window.Hide()
+		m.startTracks(m.tracks, 0)
+	}
+	if m.window.Hidden() && m.queue.Index == 1 && m.audioState.Playing {
+		fmt.Println("BACKGROUND_CHECK_OK: hidden window advanced to track 2")
+		m.quit()
+		return
+	}
+	if m.backgroundExpired.Swap(false) {
+		fmt.Printf("BACKGROUND_CHECK_TIMEOUT hidden=%v index=%d running=%v state=%+v\n", m.window.Hidden(), m.queue.Index, m.audioRunning, m.audioState)
+		os.Exit(2)
+	}
 }

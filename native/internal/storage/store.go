@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"sync"
 
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 )
 
 type Appearance struct {

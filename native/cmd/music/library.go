@@ -10,13 +10,13 @@ import (
 
 	"github.com/vivaui/viva/flex"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/audio"
-	"huawei-music-desktop/native/internal/huawei"
-	"huawei-music-desktop/native/internal/library"
-	"huawei-music-desktop/native/internal/lyrics"
-	queuepkg "huawei-music-desktop/native/internal/player"
-	"huawei-music-desktop/native/internal/storage"
-	"huawei-music-desktop/native/internal/visual"
+	"hwmusic/native/internal/audio"
+	"hwmusic/native/internal/huawei"
+	"hwmusic/native/internal/library"
+	"hwmusic/native/internal/lyrics"
+	queuepkg "hwmusic/native/internal/player"
+	"hwmusic/native/internal/storage"
+	"hwmusic/native/internal/visual"
 )
 
 type libraryResult struct {

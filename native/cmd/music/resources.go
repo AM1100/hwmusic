@@ -14,11 +14,11 @@ import (
 
 	"github.com/vivaui/viva/app"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/huawei"
-	"huawei-music-desktop/native/internal/lyrics"
-	"huawei-music-desktop/native/internal/resource"
-	"huawei-music-desktop/native/internal/storage"
-	"huawei-music-desktop/native/internal/visual"
+	"hwmusic/native/internal/huawei"
+	"hwmusic/native/internal/lyrics"
+	"hwmusic/native/internal/resource"
+	"hwmusic/native/internal/storage"
+	"hwmusic/native/internal/visual"
 )
 
 type coverResult struct {

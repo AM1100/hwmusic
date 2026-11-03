@@ -1,4 +1,12 @@
-# 听澜原生开发说明
+# Linux 本地适配（2026-11-03）
+
+已在 Ubuntu 26.04.1 x86_64 / Wayland + XWayland 完成原生构建和离线验证。
+`npm run dist:linux` 生成带 `install.sh` 的 tar.gz，`npm run dist:linux:deb` 生成本机 x64 Debian 包。
+解压后运行 `sh install.sh` 可安装到当前用户应用菜单，无需管理员权限。
+详细依赖和卸载方式见 [Linux 说明](linux/LINUX.md)。构建需要 Go 1.26.10+、C 编译器和 Node.js 22.15+，运行无需 Go/Node。
+真实账号扫码、在线音乐与托盘体验待验收。下文较早的“Linux 不打包”指原远程 CI 发布流程，本地打包已补充，未修改远程 CI。
+
+# hwmusic原生开发说明
 
 默认启动已切到 `cmd/music`（Viva v0.1.3 / Go 1.26.10）。旧 Electron 客户端已移除；不是已经完成全部验收的发行版。macOS arm64 已用于用户实际听歌并经授权截图；自动化验收使用离线合成数据，不替代不同账号权益验证。Windows/Linux 尚未实机验收。按用户最新要求，不以逐像素一致作为收口条件。
 
@@ -17,9 +25,9 @@ npm run dist
 
 `build` / `dist` 默认均为原生。开发统一在 `develop`，Actions 手动勾选 macOS arm64 / Intel x64 / Windows x64，只上传 artifacts。草稿 PR 不运行构建；正式 PR 到 `main` 仅执行单平台代码检查、不打包，必须通过 `Build gate`；合并后重新构建三平台并自动发布 Latest。标签为 `v<package.version>-build.<run_number>`，不覆盖旧版本。Windows 使用当前用户 NSIS 安装包，尚未实机验收；Linux 暂不打包。手动工作流必须选择 develop 且至少勾选一个平台。
 
-本地 `.app` 位于 `out/native/Tinglan.app`，独立程序位于 `out/native/tinglan/<platform>-<arch>/`，带许可证与 SHA256。默认未签名；仅显式设置签名环境变量时使用证书。未公证、不发布，不注册全局 hms。
+本地 `.app` 位于 `out/native/hwmusic.app`，独立程序位于 `out/native/hwmusic/<platform>-<arch>/`，带许可证与 SHA256。默认未签名；仅显式设置签名环境变量时使用证书。未公证、不发布，不注册全局 hms。
 
-普通启动自动读取原生专用 profile：系统配置目录下 `huawei-music-desktop/native-v1`。通用设置、歌词缓存与按账号散列隔离的队列/库缓存分开；凭据按用户选择保存在本机应用数据目录，保存失败则仅保留内存会话。不读取或迁移旧 Electron 密文。
+普通启动自动读取原生专用 profile：系统配置目录下 `hwmusic/native-v1`。通用设置、歌词缓存与按账号散列隔离的队列/库缓存分开；凭据按用户选择保存在本机应用数据目录，保存失败则仅保留内存会话。不读取或迁移旧 Electron 密文。
 
 ## 离线验证
 
@@ -46,7 +54,7 @@ macOS 音频脚本 `native/scripts/test-audio.sh` 使用 Python、系统 afconve
 - macOS 托盘/单实例/媒体键与普通字体选择有适配；物理媒体键待验，Windows/Linux 字体选择已补适配并交叉编译，显示待实机验收；Linux 已接 MPRIS（曲目、状态、播放/定位、音量/随机/循环），Windows 已接 SMTC（曲目、状态、时间线与媒体事件）；后两者只有交叉编译证据，未做实机验收。
 - 详情 hero、沉浸歌词、外观表单与可搜索系统字体选择、半透明边框及动态背景模糊已补。截图差分保留作参考，不声称精确匹配；用户已明确无需继续抠像素细节。详见 [迁移记录](../docs/VIVA_MIGRATION.md)。
 
-### 听澜界面更新（2026-10-29）
+### hwmusic界面更新（2026-10-29）
 
 - 显示名由 `native/app-name.mjs` 生成，数据目录和技术包名保持不变。
 - 封面支持 JPEG/PNG/GIF/WebP，优先尝试安全的各尺寸/备用地址，缺失时查询专辑封面；失败退避重试，缓存按最近使用淘汰。
@@ -60,7 +68,7 @@ macOS 音频脚本 `native/scripts/test-audio.sh` 使用 Python、系统 afconve
 
 ### 本地凭据与可选签名
 
-用户选择将音乐会话保存在应用数据目录，不再依赖系统钥匙串。macOS 路径为 `~/Library/Application Support/huawei-music-desktop/native-v1/session.local.json`，不写入 `.app` 或安装目录。文件为 0600、目录为 0700（Windows 权限语义和真实 ACL 未验）。文件包含 AES-GCM 密文及其随机密钥，一次原子替换；密钥同存不构成对同用户程序的加密保护，实际保护依赖操作系统用户隔离和文件权限。
+用户选择将音乐会话保存在应用数据目录，不再依赖系统钥匙串。macOS 路径为 `~/Library/Application Support/hwmusic/native-v1/session.local.json`，不写入 `.app` 或安装目录。文件为 0600、目录为 0700（Windows 权限语义和真实 ACL 未验）。文件包含 AES-GCM 密文及其随机密钥，一次原子替换；密钥同存不构成对同用户程序的加密保护，实际保护依赖操作系统用户隔离和文件权限。
 
 启动/保存/退出均不调用系统凭据接口。旧 `session.enc` 不自动解密，升级后重新登录一次；退出账号删除新旧会话文件，但不访问或删除旧钥匙串项。旧 Electron 数据不迁移。文件损坏或保存失败不输出凭据，保存失败时提示退出后重新登录。原生包白名单不包含用户数据。
 

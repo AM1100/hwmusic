@@ -6,7 +6,7 @@ import (
 
 	"github.com/vivaui/viva/app"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/lyrics"
+	"hwmusic/native/internal/lyrics"
 )
 
 func click(t *testing.T, d *app.Driver, id ui.ID) {

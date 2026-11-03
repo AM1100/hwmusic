@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/vivaui/viva/flex"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/typography"
+	"hwmusic/native/internal/typography"
 	"math"
 	"strings"
 )

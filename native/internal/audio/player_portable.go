@@ -16,7 +16,7 @@ import (
 	"github.com/gopxl/beep"
 	"github.com/gopxl/beep/flac"
 	"github.com/gopxl/beep/mp3"
-	"huawei-music-desktop/native/internal/resource"
+	"hwmusic/native/internal/resource"
 )
 
 type State struct {

@@ -4,9 +4,11 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
 const root=fileURLToPath(new URL('../../',import.meta.url));
-const dir=join(root,'out/native/tinglan',`${process.platform}-${process.arch}`);
-const binary=process.platform==='win32'?'tinglan.exe':'tinglan';
+const dir=join(root,'out/native/hwmusic',`${process.platform}-${process.arch}`);
+const binary=process.platform==='win32'?'hwmusic.exe':'hwmusic';
 const expected=[binary,'LICENSE','THIRD_PARTY_NOTICES.txt','icon.LICENSE.txt','NOTICE.txt','SHA256SUMS'].sort();
+if (process.platform === 'linux') expected.push('icon.png', 'install.sh', 'uninstall.sh', 'hwmusic.desktop', 'LINUX.md');
+expected.sort();
 assert.deepEqual((await readdir(dir)).sort(),expected,'Unexpected payload file');
 for(const name of expected){assert.ok((await lstat(join(dir,name))).isFile(),'No links or directories in payload');}
 const bytes=await readFile(join(dir,binary));

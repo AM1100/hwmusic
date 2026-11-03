@@ -11,9 +11,9 @@ import (
 	"github.com/vivaui/viva/app"
 	"github.com/vivaui/viva/ui"
 
-	"huawei-music-desktop/native/internal/audio"
-	"huawei-music-desktop/native/internal/huawei"
-	"huawei-music-desktop/native/internal/webauth"
+	"hwmusic/native/internal/audio"
+	"hwmusic/native/internal/huawei"
+	"hwmusic/native/internal/webauth"
 )
 
 var (
@@ -91,7 +91,7 @@ func (m *model) startLogin() {
 	m.generation++
 	generation := m.generation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
-	m.cancel, m.busy, m.status = cancel, true, "请在授权窗口完成华为登录，完成后会自动返回听澜"
+	m.cancel, m.busy, m.status = cancel, true, "请在授权窗口完成华为登录，完成后会自动返回hwmusic"
 	go func() {
 		defer cancel()
 		attempt := huawei.NewAttempt(time.Now())
@@ -127,6 +127,7 @@ func (m *model) cancelLogin() {
 }
 
 func (m *model) wake() {
+	defer m.checkBackground()
 	m.applySessionChecks()
 	m.applyPersistence()
 	m.applyMedia()

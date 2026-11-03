@@ -16,7 +16,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"huawei-music-desktop/native/internal/resource"
+	"hwmusic/native/internal/resource"
 )
 
 type remoteSource struct {

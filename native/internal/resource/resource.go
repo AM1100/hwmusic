@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 )
 
 const MaxChunk = 1024 * 1024

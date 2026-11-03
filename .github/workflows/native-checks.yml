@@ -1,4 +1,4 @@
-name: Tinglan native builds
+name: hwmusic native builds
 on:
   push:
     branches: [main]
@@ -126,7 +126,7 @@ jobs:
       - name: Upload installer and checksum
         uses: actions/upload-artifact@v4
         with:
-          name: tinglan-${{ matrix.id }}-unsigned
+          name: hwmusic-${{ matrix.id }}-unsigned
           path: release/native/${{ matrix.directory }}/*
           if-no-files-found: error
           retention-days: 14
@@ -181,14 +181,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          pattern: tinglan-*-unsigned
+          pattern: hwmusic-*-unsigned
           path: artifacts
       - name: Verify all three installers
         run: |
           set -euo pipefail
           mkdir release-assets
           for target in macos-arm64 macos-x64 windows-x64; do
-            dir="artifacts/tinglan-${target}-unsigned"
+            dir="artifacts/hwmusic-${target}-unsigned"
             (cd "$dir" && sha256sum --check SHA256SUMS)
             find "$dir" -maxdepth 1 -type f \( -name '*.dmg' -o -name '*.exe' \) -exec cp {} release-assets/ \;
             cat "$dir/SHA256SUMS" >> release-assets/SHA256SUMS
@@ -204,5 +204,5 @@ jobs:
           version=$(node -p 'require("./package.json").version')
           tag="v${version}-build.${RUN_NUMBER}"
           gh release create "$tag" release-assets/* --target "$COMMIT" \
-            --latest --title "听澜 Tinglan ${version} · Build ${RUN_NUMBER}" \
+            --latest --title "hwmusic hwmusic ${version} · Build ${RUN_NUMBER}" \
             --notes-file docs/RELEASE_NOTES.md

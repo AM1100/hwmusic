@@ -1,8 +1,8 @@
 package main
 
 import (
-	"huawei-music-desktop/native/internal/huawei"
-	"huawei-music-desktop/native/internal/storage"
+	"hwmusic/native/internal/huawei"
+	"hwmusic/native/internal/storage"
 	"testing"
 	"time"
 )

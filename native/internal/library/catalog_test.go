@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 )
 
 func Test965DedupRetryAndTotal(t *testing.T) {

@@ -4,9 +4,9 @@ package main
 
 import (
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/audio"
-	"huawei-music-desktop/native/internal/media"
-	"huawei-music-desktop/native/internal/testsupport"
+	"hwmusic/native/internal/audio"
+	"hwmusic/native/internal/media"
+	"hwmusic/native/internal/testsupport"
 	"math"
 	"os"
 	"path/filepath"

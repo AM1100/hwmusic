@@ -16,7 +16,7 @@ import (
 	"github.com/zzl/go-com/com"
 	"github.com/zzl/go-webview2/wv2"
 	"github.com/zzl/go-win32api/v2/win32"
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 )
 
 func NeedsManualCallback() bool { return false }
@@ -103,7 +103,7 @@ func webViewAuthorize(ctx context.Context, address string, allowed func(string) 
 	if _, err := webviewloader.GetAvailableCoreWebView2BrowserVersionString(""); err != nil {
 		return "", errors.New("webview2 runtime unavailable")
 	}
-	dir, err := os.MkdirTemp("", "tinglan-webview-auth-")
+	dir, err := os.MkdirTemp("", "hwmusic-webview-auth-")
 	if err != nil {
 		return "", errors.New("temporary browser profile unavailable")
 	}
@@ -124,7 +124,7 @@ func webViewAuthorize(ctx context.Context, address string, allowed func(string) 
 	scope := com.NewScope()
 	defer scope.Leave()
 	instance, _ := win32.GetModuleHandle(nil)
-	className := win32.StrToPwstr("TinglanAuthorizationWindow")
+	className := win32.StrToPwstr("hwmusicAuthorizationWindow")
 	authWindowClass.Do(func() {
 		class := win32.WNDCLASSEX{LpfnWndProc: authWindowProc, HInstance: instance, LpszClassName: className}
 		class.CbSize = uint32(unsafe.Sizeof(class))
@@ -137,7 +137,7 @@ func webViewAuthorize(ctx context.Context, address string, allowed func(string) 
 	if !authWindowClassOK {
 		return "", errors.New("authorization window initialization failed")
 	}
-	hwnd, _ := win32.CreateWindowEx(0, className, win32.StrToPwstr("Tinglan - Huawei Account"), win32.WS_OVERLAPPEDWINDOW,
+	hwnd, _ := win32.CreateWindowEx(0, className, win32.StrToPwstr("hwmusic - Huawei Account"), win32.WS_OVERLAPPEDWINDOW,
 		win32.CW_USEDEFAULT, win32.CW_USEDEFAULT, 820, 720, 0, 0, instance, nil)
 	if hwnd == 0 {
 		return "", errors.New("authorization window initialization failed")

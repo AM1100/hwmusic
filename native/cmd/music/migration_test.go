@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/vivaui/viva/app"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 	"strings"
 	"testing"
 )

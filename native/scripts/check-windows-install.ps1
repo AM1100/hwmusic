@@ -2,9 +2,9 @@ $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path "$PSScriptRoot/../..").Path
 $package = Get-ChildItem "$root/release/native/win32-x64/*-setup-unsigned.exe" | Select-Object -First 1
 if (!$package) { throw 'Installer missing' }
-$target = Join-Path $env:RUNNER_TEMP ('tinglan-install-' + [guid]::NewGuid().ToString('N'))
+$target = Join-Path $env:RUNNER_TEMP ('hwmusic-install-' + [guid]::NewGuid().ToString('N'))
 $name = ([char]0x542c).ToString() + [char]0x6f9c
-$programs = Join-Path ([Environment]::GetFolderPath('Programs')) 'Tinglan'
+$programs = Join-Path ([Environment]::GetFolderPath('Programs')) 'hwmusic'
 New-Item -ItemType Directory -Force -Path $programs | Out-Null
 $oldName = [System.Text.Encoding]::GetEncoding(1252).GetString([System.Text.Encoding]::UTF8.GetBytes($name))
 $oldLink = Join-Path $programs ($oldName + '.lnk')
@@ -46,7 +46,7 @@ New-Item -ItemType Directory -Force -Path $diagnostics | Out-Null
 Copy-Item -LiteralPath $link -Destination (Join-Path $diagnostics 'installed-shortcut.lnk')
 $shortcutTarget = [ShortcutReader]::Read($link)
 if ([string]::IsNullOrWhiteSpace($shortcutTarget)) { throw 'IShellLinkW returned an empty target' }
-$expected = Join-Path $target 'tinglan.exe'
+$expected = Join-Path $target 'hwmusic.exe'
 Write-Output "Expected executable: $expected"
 Write-Output "Shortcut executable: $shortcutTarget"
 # Resolve actual files rather than comparing DOS short paths with long paths.
@@ -70,7 +70,7 @@ function Get-CanonicalFilePath([string]$Path) {
     } finally { $stream.Dispose() }
 }
 if ((Get-CanonicalFilePath $shortcutTarget) -ne (Get-CanonicalFilePath $expected)) { throw 'Wrong shortcut executable' }
-$built = Join-Path $root 'out/native/tinglan/win32-x64/tinglan.exe'
+$built = Join-Path $root 'out/native/hwmusic/win32-x64/hwmusic.exe'
 if ((Get-FileHash -LiteralPath $expected).Hash -ne (Get-FileHash -LiteralPath $built).Hash) { throw 'Installed executable differs from payload' }
 if (!(Test-Path -LiteralPath $shortcutTarget)) { throw 'Installed executable missing' }
 # Do not launch the app: installation checks must never open a personal profile.

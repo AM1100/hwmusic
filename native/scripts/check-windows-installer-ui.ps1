@@ -3,7 +3,7 @@ Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName UIAutomationTypes
 $root = (Resolve-Path "$PSScriptRoot/../..").Path
 $package = Get-ChildItem "$root/release/native/win32-x64/*-setup-unsigned.exe" | Select-Object -First 1
-$target = Join-Path $env:RUNNER_TEMP ('tinglan-ui-install-' + [guid]::NewGuid().ToString('N'))
+$target = Join-Path $env:RUNNER_TEMP ('hwmusic-ui-install-' + [guid]::NewGuid().ToString('N'))
 $process = Start-Process $package.FullName -ArgumentList @("/D=$target") -PassThru
 function Get-Window {
     $condition = [System.Windows.Automation.PropertyCondition]::new([System.Windows.Automation.AutomationElement]::ProcessIdProperty, $process.Id)

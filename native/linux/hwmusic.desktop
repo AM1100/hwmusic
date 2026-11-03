@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=hwmusic
+Name[en]=hwmusic
+Comment=华为音乐非官方桌面客户端
+Exec=hwmusic
+Icon=hwmusic
+Terminal=false
+Categories=AudioVideo;Audio;Music;
+StartupNotify=false

@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/audio"
+	"hwmusic/native/internal/audio"
 	"testing"
 	"time"
 )

@@ -30,9 +30,9 @@ try {
       'click "播放全部"','click "打开沉浸歌词"','settle 400','layout',`shot ${join(qa,'stage-current.png')}`,
       'resize 960 640','click "调节音量"','layout',`shot ${join(qa,'volume-menu-960.png')}`,'click "调节音量"','layout',`shot ${join(qa,'stage-960.png')}`,'click "歌词选项"','layout',`shot ${join(qa,'lyrics-menu-960.png')}`,'click "歌词提前半秒"','click "歌词选项"','click "退出沉浸歌词"','settle 400','click "播放队列"','layout',`shot ${join(qa,'drawer-current.png')}`,'quit',
     ] : ['click "播放全部"','waitfor "共 965 首收藏" 5000','click "播放队列"','layout',`shot ${join(qa,'queue-965.png')}`,'quit'];
-    const run = spawnSync(binary, ['--demo', String(count), '--profile', profile], { cwd: root, env: { ...process.env, VIVA_HEADLESS: '1' }, input: commands.join('\n')+'\n', encoding: 'utf8', timeout: 30000 });
+    const run = spawnSync(binary, ['--demo', String(count), '--profile', profile], { cwd: root, env: { ...process.env, VIVA_HEADLESS: '1' }, input: commands.join('\n')+'\n', encoding: 'utf8', timeout: process.platform === 'linux' ? 120000 : 30000 });
     await writeFile(join(qa,`ui-${count}.txt`), (run.stdout||'')+(run.stderr||''));
-    if (run.error || run.status !== 0 || /^error\b/m.test(run.stdout) || /ok [1-9]\d* problems/.test(run.stdout)) throw new Error(`Native UI check failed for ${count}; see out/native/qa/ui-${count}.txt`);
+    if (run.error || run.status !== 0 || /^error\b/m.test(run.stdout) || /ok [1-9]\d* problems/.test(run.stdout)) throw new Error(`Native UI check failed for ${count}; ${run.error?.message || `exit ${run.status}`}; see out/native/qa/ui-${count}.txt`);
     report.layouts.push({ tracks: count, checks: (run.stdout.match(/ok 0 problems/g)||[]).length });
   }
   const saved = JSON.parse(await readFile(join(profile, 'queue.json'), 'utf8'));

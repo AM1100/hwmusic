@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"huawei-music-desktop/native/internal/huawei"
+	"hwmusic/native/internal/huawei"
 	"os"
 	"path/filepath"
 	"strings"

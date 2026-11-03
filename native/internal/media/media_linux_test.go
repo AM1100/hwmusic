@@ -9,6 +9,36 @@ import (
 	"time"
 )
 
+func TestIndependentFrontendNames(t *testing.T) {
+	if os.Getenv("HWMUSIC_TEST_MPRIS") == "" {
+		t.Skip("isolated session bus required")
+	}
+	desktop := New(func(Event) {})
+	terminal := NewNamed(func(Event) {}, "org.mpris.MediaPlayer2.hwmusic", "hwmusic TUI", "hwmusic")
+	if desktop == nil || terminal == nil {
+		if desktop != nil {
+			desktop.Close()
+		}
+		if terminal != nil {
+			terminal.Close()
+		}
+		t.Fatal("independent frontend registration failed")
+	}
+	defer desktop.Close()
+	defer terminal.Close()
+	conn, err := dbus.ConnectSessionBus()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer conn.Close()
+	for name, want := range map[string]string{busName: "hwmusic", "org.mpris.MediaPlayer2.hwmusic": "hwmusic TUI"} {
+		value, err := conn.Object(name, objectPath).GetProperty("org.mpris.MediaPlayer2.Identity")
+		if err != nil || value.Value() != want {
+			t.Fatal("frontend identity mismatch")
+		}
+	}
+}
+
 func TestMPRISWithIsolatedBus(t *testing.T) {
 	if os.Getenv("HWMUSIC_TEST_MPRIS") == "" {
 		t.Skip("run with dbus-run-session and HWMUSIC_TEST_MPRIS=1")

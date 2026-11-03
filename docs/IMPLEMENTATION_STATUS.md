@@ -1,5 +1,17 @@
 # 实现状态
 
+源码完整更名（2026-11-03）：当前源码目录为 work/hwmusic，Go module 为 hwmusic/native，npm package 为 hwmusic。当前界面、示例、构建脚本、应用资源路径和打包命名统一使用 hwmusic；原项目历史记录及上游地址保留原名称以保持可核对性。用户数据仍用原配置兼容路径。
+
+终端版更名（2026-11-03）：按当前用户要求将终端命令、界面标题、帮助和媒体显示名改为 `hwmusic`，入口改为 `cmd/hwmusic`。保留 `terminal-v1` 配置目录以继续使用已有登录、队列和设置；桌面版名称不变。
+
+终端版（2026-11-03，当前用户明确要求）：新增独立 `cmd/tinglan-tui` 与 Bubble Tea 前端，不依赖 Viva 或图形显示。用户选择首次浏览器扫码，之后终端播放。复用华为协议、流式 MP3/FLAC、歌词与队列，支持收藏/歌单分页、搜索、历史、完整收藏/歌单播放、播放模式和音质、音量、进度及独立 MPRIS。终端使用 `terminal-v1` profile，与桌面版及 musicfox 分开；不自动读取其他客户端的会话，不自动续期。构建安装入口为 `npm run build:tui` / `npm run install:tui`。音频与网络结果按代次隔离，退出或快速切歌关闭失效播放器。
+
+离线验证通过：全模块测试、vet、终端状态 race；无 DISPLAY/WAYLAND_DISPLAY 的真实伪终端内运行合成 MP3/FLAC，执行完整列表播放、歌词、暂停/继续、队列、音量、中文搜索、帮助和退出；既有浏览器合成回调、音频设备集成与隔离 MPRIS 测试通过。真实华为账号扫码、会话恢复与在线音乐仍待用户验收，未主动读取保存的私人会话，未执行真实账号写操作或推送发布。
+
+Linux 本地迁移（2026-11-03，按当前用户要求）：在 Ubuntu 26.04.1 x86_64 / Wayland + XWayland 上完成 Go 1.26.10 原生构建。新增 Linux 应用菜单、图标、无需 root 的用户安装/卸载脚本与 `.deb` 打包入口；保留原应用标识和配置目录。修正 MPRIS Seek 导出实现命名导致的 vet 报错（D-Bus 协议名不变）；后台合成验证改由 UI OnWake 执行窗口操作，避免非 macOS 直接从定时器操作 UI，并让 Linux 正确报告成功。Linux 的多截图 UI 检查时间上限改为 120 秒，仍检查所有布局和退出状态。
+
+已验证：全模块 Go 测试、vet、真实 Chrome 下的本地合成 302/JavaScript/取消/加载失败回调、隔离 D-Bus 会话下 MPRIS 播放状态/跳转/音量/循环、合成 MP3/FLAC 的播放/暂停/跳转/结束、真实 Linux 窗口隐藏后自动进入第二首、34 项 headless UI 布局及 965 首队列落盘、安装包白名单/许可/SHA256、用户安装/卸载与桌面文件校验。截图全部是合成数据。仍待当前用户验收真实扫码登录、账号会话恢复、在线曲库和在线歌曲、实际听感、托盘与物理媒体键。构建不代表这些项目已通过；未提交、推送、合并或发布。远程 CI 发布策略保持原状。
+
 发布授权（2026-10-30）：用户明确要求提 PR、合并并发布 Release，覆盖此前 PR #7 保持草稿的限制。本次准备将 develop 的 Windows 安装/授权修复、关闭到托盘默认值及 macOS 完整 bundle 临时签名合入 main；必须通过 PR gate，三平台构建全部成功才发布 Latest。用户反馈 Windows 其余功能暂无大问题，但未逐项提供完整实机验收记录，不以发布代替验收。
 
 macOS 包签名修复（2026-10-30）：用户下载后提示损坏。实际安装包与 v0.0.2 Release arm64 DMG（均校验 SHA256）中的应用都只有 linker-signed/a.out、Info.plist not bound、Sealed Resources none，codesign strict 均报缺少资源签名；历史 Mac 打包脚本一致，不能归因于近期 Windows 改动。用户此前 Release 可打开的具体原因未确定，不以隔离标记推测代替证据。提交 d4f46f4 为无证书测试构建补完整 ad-hoc bundle seal，并在打包复制后验证。macOS arm64 Actions 41037078143 成功，新产物已下载、校验 SHA256、只读挂载，codesign --verify --deep --strict 通过，Info.plist 与资源已绑定；仍未获 Developer ID 签名/Apple 公证，不代表 Gatekeeper 自动放行。未修改用户已安装应用或移除其 quarantine，未合并 main/发布 Release。

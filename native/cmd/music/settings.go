@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/storage"
-	"huawei-music-desktop/native/internal/typography"
-	"huawei-music-desktop/native/internal/visual"
+	"hwmusic/native/internal/storage"
+	"hwmusic/native/internal/typography"
+	"hwmusic/native/internal/visual"
 )
 
 var settingOptions = tree.Sub(shell, tree.Name("setting-options"))

@@ -2,7 +2,7 @@
 
 - 当前 roadmap：只做 Windows 可用性验证与相关缺陷修复，验收前不增加新功能。日常改动留在 develop；用户已于 2026-10-30 明确授权将 PR #7 合并 main 并发布本次测试版，后续合并和发布仍需用户授权。CI 成功不代替 Windows 实机验收。
 
-- 听澜（Tinglan）是 Go + Viva 原生华为音乐第三方桌面客户端。旧 Electron/React 客户端与工具已移除，不恢复旧技术栈。
+- hwmusic（hwmusic）是 Go + Viva 原生华为音乐第三方桌面客户端。旧 Electron/React 客户端与工具已移除，不恢复旧技术栈。
 - 开工先读 README.md、docs/IMPLEMENTATION_STATUS.md、docs/API_CONTRACT.md、docs/authorized-feature-validation.md。历史方案/验证记录保留作参考，与当前状态冲突时以当前实现和最新用户要求为准。
 - 原生代码在 native/；启动 npm start，构建 npm run build，测试 npm test，静态检查 npm run vet，界面回归 npm run test:native:ui。Go 可执行文件可通过 HWMUSIC_GO 传给构建/启动脚本。
 - macOS Apple Silicon 是当前主要实机环境。GitHub Actions 构建 macOS arm64 / Intel x64 DMG 和 Windows x64 NSIS 安装包；Windows 尚未实机验收，Linux 暂不打包，编译成功不能宣称验收。
@@ -18,3 +18,5 @@
 - 二进制公开分发仅通过 GitHub Release；main 合并触发三平台构建，全成功后以 v<version>-build.<run_number> 标签发布 Latest，不覆盖历史版本。手动运行仅允许 develop。发布说明必须保留未签名、非官方、OAuth 身份不属于本项目以及未验平台边界。
 - 不擅自提交、推送、发布、公开仓库或删除研究现场。合成测试/截图不能当作私人账号证据，真实截图需用户授权。
 - 维护简短、可核对的 docs/IMPLEMENTATION_STATUS.md，明确区分实现、离线测试与实机验收。不要引入复杂框架、后端服务或云端凭据代理。
+
+- 当前用户于 2026-11-03 明确要求将源码目录、Go module、package name、构建产物和当前品牌统一为 hwmusic，覆盖较早的技术包名不变规则。历史事实、上游链接、原作者版权及用户配置兼容路径保留。

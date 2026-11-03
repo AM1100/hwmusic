@@ -36,17 +36,22 @@ const playerInterface = "org.mpris.MediaPlayer2.Player"
 const objectPath = dbus.ObjectPath("/org/mpris/MediaPlayer2")
 
 func New(callback func(Event)) *Controller {
+	return NewNamed(callback, busName, "hwmusic", "hwmusic")
+}
+
+// NewNamed gives independent frontends separate MPRIS identities.
+func NewNamed(callback func(Event), name, identity, desktopEntry string) *Controller {
 	conn, err := dbus.ConnectSessionBus()
 	if err != nil {
 		return nil
 	}
-	reply, err := conn.RequestName(busName, dbus.NameFlagDoNotQueue)
+	reply, err := conn.RequestName(name, dbus.NameFlagDoNotQueue)
 	if err != nil || reply != dbus.RequestNameReplyPrimaryOwner {
 		conn.Close()
 		return nil
 	}
 	c := &Controller{conn: conn, callback: callback}
-	if conn.ExportMethodTable(map[string]interface{}{"PlayPause": c.PlayPause, "Play": c.Play, "Pause": c.Pause, "Previous": c.Previous, "Next": c.Next, "Stop": c.Stop, "Seek": c.Seek, "SetPosition": c.SetPosition, "OpenUri": c.OpenUri}, objectPath, playerInterface) != nil {
+	if conn.ExportMethodTable(map[string]interface{}{"PlayPause": c.PlayPause, "Play": c.Play, "Pause": c.Pause, "Previous": c.Previous, "Next": c.Next, "Stop": c.Stop, "Seek": c.seekOffset, "SetPosition": c.SetPosition, "OpenUri": c.OpenUri}, objectPath, playerInterface) != nil {
 		conn.Close()
 		return nil
 	}
@@ -57,7 +62,7 @@ func New(callback func(Event)) *Controller {
 	}
 	values := prop.Map{
 		"org.mpris.MediaPlayer2": {
-			"CanQuit": {Value: true}, "CanRaise": {Value: true}, "HasTrackList": {Value: false}, "Identity": {Value: "Tinglan"}, "DesktopEntry": {Value: "tinglan"}, "SupportedUriSchemes": {Value: []string{}}, "SupportedMimeTypes": {Value: []string{"audio/mpeg", "audio/flac"}},
+			"CanQuit": {Value: true}, "CanRaise": {Value: true}, "HasTrackList": {Value: false}, "Identity": {Value: identity}, "DesktopEntry": {Value: desktopEntry}, "SupportedUriSchemes": {Value: []string{}}, "SupportedMimeTypes": {Value: []string{"audio/mpeg", "audio/flac"}},
 		},
 		playerInterface: {
 			"PlaybackStatus": {Value: "Stopped", Emit: prop.EmitTrue}, "LoopStatus": {Value: "None", Writable: true, Emit: prop.EmitTrue, Callback: func(change *prop.Change) *dbus.Error {
@@ -124,7 +129,7 @@ func (c *Controller) Pause() *dbus.Error     { c.emit(2, 0); return nil }
 func (c *Controller) Previous() *dbus.Error  { c.emit(3, 0); return nil }
 func (c *Controller) Next() *dbus.Error      { c.emit(4, 0); return nil }
 func (c *Controller) Stop() *dbus.Error      { c.emit(2, 0); c.emit(5, 0); return nil }
-func (c *Controller) Seek(offset int64) *dbus.Error {
+func (c *Controller) seekOffset(offset int64) *dbus.Error {
 	c.mu.Lock()
 	position := c.position
 	c.mu.Unlock()

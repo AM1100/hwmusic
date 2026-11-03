@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/huawei"
-	"huawei-music-desktop/native/internal/icons"
-	"huawei-music-desktop/native/internal/library"
-	"huawei-music-desktop/native/internal/visual"
+	"hwmusic/native/internal/huawei"
+	"hwmusic/native/internal/icons"
+	"hwmusic/native/internal/library"
+	"hwmusic/native/internal/visual"
 )
 
 var albumRows = tree.Sub(shell, tree.Name("album-links"))

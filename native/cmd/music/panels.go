@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/icons"
-	"huawei-music-desktop/native/internal/visual"
+	"hwmusic/native/internal/icons"
+	"hwmusic/native/internal/visual"
 )
 
 var traySettingID = tree.ID(shell, "close-to-tray")

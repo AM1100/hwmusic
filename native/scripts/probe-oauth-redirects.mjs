@@ -21,7 +21,7 @@ assert.ok(executablePath, 'Set HWMUSIC_AUTH_BROWSER to a Chromium executable');
 const browser = await chromium.launch({ executablePath, headless: true });
 const results = [];
 try {
-  for (const redirect of [constant('redirectURI'), 'tinglan://oauth/callback', 'tinglan:/oauth2redirect', 'http://127.0.0.1:8765/callback', 'http://127.0.0.1:49152/callback']) {
+  for (const redirect of [constant('redirectURI'), 'hwmusic://oauth/callback', 'hwmusic:/oauth2redirect', 'http://127.0.0.1:8765/callback', 'http://127.0.0.1:49152/callback']) {
     // Each candidate gets a fresh, nonpersistent context, state and PKCE verifier.
     const context = await browser.newContext({ serviceWorkers: 'block' });
     try {

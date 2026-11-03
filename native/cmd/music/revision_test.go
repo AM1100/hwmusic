@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/vivaui/viva/app"
 	"github.com/vivaui/viva/ui"
-	"huawei-music-desktop/native/internal/lyrics"
+	"hwmusic/native/internal/lyrics"
 	"math"
 	"reflect"
 	"strings"

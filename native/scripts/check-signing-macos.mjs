@@ -10,7 +10,7 @@ import { signMacOS, macSigningIdentity } from './sign-macos.mjs';
 if (process.platform !== 'darwin' || !macSigningIdentity()) throw new Error('A configured macOS signing identity is required');
 process.env.HWMUSIC_MAC_SIGN_IDENTITY ||= macSigningIdentity();
 const root = fileURLToPath(new URL('../', import.meta.url));
-const scratch = mkdtempSync(join(tmpdir(), 'tinglan-signing-check-'));
+const scratch = mkdtempSync(join(tmpdir(), 'hwmusic-signing-check-'));
 const binary = join(scratch, 'probe');
 const source = join(scratch, 'main.go');
 const service = `org.hwmusicdesktop.signing-test.${randomUUID()}`;
